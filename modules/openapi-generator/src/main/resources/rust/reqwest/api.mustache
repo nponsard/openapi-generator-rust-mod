@@ -347,6 +347,8 @@ pub {{#supportAsync}}async {{/supportAsync}}fn {{{operationId}}}(configuration: 
     let local_var_status = local_var_resp.status();
     let local_var_content = local_var_resp.text(){{#supportAsync}}.await{{/supportAsync}}?;
 
+    let local_var_headers = local_var_resp.headers().clone();
+
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         {{^supportMultipleResponses}}
         {{^returnType}}
@@ -358,12 +360,12 @@ pub {{#supportAsync}}async {{/supportAsync}}fn {{{operationId}}}(configuration: 
         {{/supportMultipleResponses}}
         {{#supportMultipleResponses}}
         let local_var_entity: Option<{{{operationIdCamelCase}}}Success> = serde_json::from_str(&local_var_content).ok();
-        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity, headers: local_var_headers };
         Ok(local_var_result)
         {{/supportMultipleResponses}}
     } else {
         let local_var_entity: Option<{{{operationIdCamelCase}}}Error> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity, headers: local_var_headers };
         Err(Error::ResponseError(local_var_error))
     }
 }
