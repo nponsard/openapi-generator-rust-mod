@@ -54,7 +54,7 @@ secrecy = "0.8.0"
 {{/withAWSV4Signature}}
 {{#reqwest}}
 {{^supportAsync}}
-reqwest = "~0.9"
+reqwest = {version = "^0.11", features = ["blocking", "json"]}
 {{/supportAsync}}
 {{#supportAsync}}
 {{#supportMiddleware}}
